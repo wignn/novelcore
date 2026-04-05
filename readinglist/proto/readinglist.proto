@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package genproto;
+
+option go_package = "github.com/wignn/micro-3/readinglist/genproto";
+
+message ReadingListEntry {
+    string id = 1;
+    string account_id = 2;
+    string novel_id = 3;
+    string status = 4;
+    double current_chapter = 5;
+    int32 rating = 6;
+    string notes = 7;
+    bool is_favorite = 8;
+    bytes created_at = 9;
+    bytes updated_at = 10;
+}
+
+message AddToReadingListRequest {
+    string account_id = 1;
+    string novel_id = 2;
+    string status = 3;
+    double current_chapter = 4;
+    int32 rating = 5;
+    string notes = 6;
+    bool is_favorite = 7;
+}
+
+message ReadingListResponse {
+    ReadingListEntry entry = 1;
+}
+
+message UpdateReadingListRequest {
+    string id = 1;
+    string status = 2;
+    double current_chapter = 3;
+    int32 rating = 4;
+    string notes = 5;
+    bool is_favorite = 6;
+}
+
+message GetReadingListRequest {
+    string account_id = 1;
+    string status = 2;
+    uint64 skip = 3;
+    uint64 take = 4;
+}
+
+message GetReadingListResponse {
+    repeated ReadingListEntry entries = 1;
+}
+
+message DeleteReadingListRequest {
+    string id = 1;
+}
+
+message DeleteReadingListResponse {
+    string deleted_id = 1;
+    string message = 2;
+    bool success = 3;
+}
+
+service ReadingListService {
+    rpc AddToReadingList(AddToReadingListRequest) returns (ReadingListResponse);
+    rpc UpdateReadingList(UpdateReadingListRequest) returns (ReadingListResponse);
+    rpc GetReadingList(GetReadingListRequest) returns (GetReadingListResponse);
+    rpc RemoveFromReadingList(DeleteReadingListRequest) returns (DeleteReadingListResponse);
+}

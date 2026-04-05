@@ -1,0 +1,61 @@
+package main
+
+import (
+	"log"
+	"net/http"
+
+	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/gorilla/handlers"
+	"github.com/kelseyhightower/envconfig"
+)
+
+type AppConfig struct {
+	AccountURL     string `envconfig:"ACCOUNT_SERVICE_URL"`
+	NovelURL       string `envconfig:"NOVEL_SERVICE_URL"`
+	ReadingListURL string `envconfig:"READINGLIST_SERVICE_URL"`
+	ReviewURL      string `envconfig:"REVIEW_SERVICE_URL"`
+	AuthURL        string `envconfig:"AUTH_SERVICE_URL"`
+}
+
+func main() {
+	var cfg AppConfig
+
+	err := envconfig.Process("", &cfg)
+	if err != nil {
+		log.Fatalf("failed to process env config: %v", err)
+	}
+
+	s, err := NewGraphQLServer(
+		cfg.AccountURL,
+		cfg.NovelURL,
+		cfg.ReadingListURL,
+		cfg.ReviewURL,
+		cfg.AuthURL,
+	)
+
+	if err != nil {
+		log.Fatalf("failed to create GraphQL server: %v", err)
+	}
+
+	schema, err := s.ToExecutableSchema()
+	if err != nil {
+		log.Fatalf("failed to create schema: %v", err)
+	}
+
+	mux := http.NewServeMux()
+	mux.Handle("/graphql", handler.NewDefaultServer(schema))
+	mux.Handle("/playground", playground.Handler("NovelUpdates GraphQL", "/graphql"))
+	corsHandler := handlers.CORS(
+		handlers.AllowedOrigins([]string{
+			"http://localhost:3000",
+			"http://54.242.132.124:3000",
+		}),
+		handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"}),
+		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
+		handlers.AllowCredentials(),
+	)(mux)
+
+	log.Println("NovelUpdates GraphQL API running at http://localhost:8000")
+	log.Fatal(http.ListenAndServe(":8000", corsHandler))
+}

@@ -1,0 +1,265 @@
+scalar Time
+
+# ── Core Types ──────────────────────────
+type Novel {
+  id: String!
+  title: String!
+  alternativeTitle: String
+  description: String
+  coverImageUrl: String
+  author: Author
+  status: String!
+  novelType: String!
+  countryOfOrigin: String
+  yearPublished: Int
+  totalChapters: Int!
+  ratingAvg: Float!
+  ratingCount: Int!
+  viewCount: Int!
+  bookmarkCount: Int!
+  genres: [Genre!]!
+  tags: [Tag!]!
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+type Chapter {
+  id: String!
+  novelId: String!
+  chapterNumber: Float!
+  title: String
+  translatorGroupId: String
+  sourceUrl: String
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+type Author {
+  id: String!
+  name: String!
+  bio: String
+  createdAt: Time!
+}
+
+type TranslationGroup {
+  id: String!
+  name: String!
+  websiteUrl: String
+  description: String
+  createdAt: Time!
+}
+
+type Genre {
+  id: Int!
+  name: String!
+  slug: String!
+}
+
+type Tag {
+  id: Int!
+  name: String!
+  slug: String!
+}
+
+type Account {
+  id: String!
+  name: String!
+  email: String!
+  avatarUrl: String
+  bio: String
+  role: String!
+  createdAt: Time!
+  readingList: [ReadingListEntry!]!
+}
+
+type ReadingListEntry {
+  id: String!
+  novelId: String!
+  status: String!
+  currentChapter: Float!
+  rating: Int
+  notes: String
+  isFavorite: Boolean!
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+type Review {
+  id: String!
+  novelId: String!
+  accountId: String!
+  rating: Int!
+  title: String
+  content: String
+  isSpoiler: Boolean!
+  upvotes: Int!
+  downvotes: Int!
+  createdAt: Time!
+}
+
+type RankedNovel {
+  rank: Int!
+  novel: Novel!
+  score: Float!
+  change: Int
+}
+
+type authResponse {
+  id: String!
+  email: String!
+  backendToken: Token!
+}
+
+type Token {
+  accessToken: String!
+  refreshToken: String!
+  expiresIn: Int!
+}
+
+type DeleteResponse {
+  deletedId: ID!
+  success: Boolean!
+  message: String!
+}
+
+# ── Inputs ──────────────────────────────
+input PaginationInput {
+  skip: Int
+  take: Int
+}
+
+input AccountInput {
+  name: String!
+  email: String!
+  password: String!
+}
+
+input EditAccountInput {
+  name: String
+  email: String
+  password: String
+  avatarUrl: String
+  bio: String
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input NovelInput {
+  title: String!
+  alternativeTitle: String
+  description: String
+  coverImageUrl: String
+  authorId: String
+  status: String
+  novelType: String
+  countryOfOrigin: String
+  yearPublished: Int
+  genreIds: [Int!]
+  tagIds: [Int!]
+}
+
+input ChapterInput {
+  novelId: String!
+  chapterNumber: Float!
+  title: String
+  translatorGroupId: String
+  sourceUrl: String
+}
+
+input AuthorInput {
+  name: String!
+  bio: String
+}
+
+input TranslationGroupInput {
+  name: String!
+  websiteUrl: String
+  description: String
+}
+
+input ReadingListInput {
+  novelId: String!
+  status: String!
+  currentChapter: Float
+  rating: Int
+  notes: String
+  isFavorite: Boolean
+}
+
+input ReviewInput {
+  novelId: String!
+  accountId: String!
+  rating: Int!
+  title: String
+  content: String
+  isSpoiler: Boolean
+}
+
+input NovelFilterInput {
+  status: String
+  novelType: String
+  countryOfOrigin: String
+  genreIds: [Int!]
+  tagIds: [Int!]
+  sortBy: String
+  sortOrder: String
+}
+
+enum RankingPeriod {
+  WEEKLY
+  MONTHLY
+  ALL_TIME
+}
+
+enum RankingSortBy {
+  VIEWS
+  BOOKMARKS
+  RATING
+}
+
+# ── Mutations ───────────────────────────
+type Mutation {
+  createAccount(account: AccountInput!): Account
+  login(account: LoginInput!): authResponse
+  refreshToken(refreshToken: String!): Token
+  editAccount(id: String!, account: EditAccountInput!): Account
+  deleteAccount(id: String!): DeleteResponse!
+
+  createNovel(novel: NovelInput!): Novel
+  updateNovel(id: String!, novel: NovelInput!): Novel
+  deleteNovel(id: String!): DeleteResponse!
+
+  createChapter(chapter: ChapterInput!): Chapter
+  updateChapter(id: String!, chapter: ChapterInput!): Chapter
+  deleteChapter(id: String!): DeleteResponse!
+
+  createAuthor(author: AuthorInput!): Author
+  createTranslationGroup(group: TranslationGroupInput!): TranslationGroup
+
+  addToReadingList(accountId: String!, entry: ReadingListInput!): ReadingListEntry
+  updateReadingList(id: String!, entry: ReadingListInput!): ReadingListEntry
+  removeFromReadingList(id: String!): DeleteResponse!
+
+  createReview(review: ReviewInput!): Review
+  deleteReview(id: String!): DeleteResponse!
+
+  incrementViewCount(novelId: String!): Int!
+}
+
+# ── Queries ─────────────────────────────
+type Query {
+  accounts(pagination: PaginationInput, id: String): [Account!]!
+  novels(pagination: PaginationInput, id: String, filter: NovelFilterInput, query: String): [Novel!]!
+  chapters(novelId: String!, pagination: PaginationInput): [Chapter!]!
+  chapter(id: String!): Chapter
+  authors(pagination: PaginationInput, id: String): [Author!]!
+  translationGroups(pagination: PaginationInput): [TranslationGroup!]!
+  genres: [Genre!]!
+  tags: [Tag!]!
+  readingList(accountId: String!, status: String, pagination: PaginationInput): [ReadingListEntry!]!
+  reviews(novelId: String!, pagination: PaginationInput): [Review!]!
+  novelRanking(period: RankingPeriod!, sortBy: RankingSortBy!, pagination: PaginationInput): [RankedNovel!]!
+}

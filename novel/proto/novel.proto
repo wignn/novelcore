@@ -1,0 +1,291 @@
+syntax = "proto3";
+
+package genproto;
+
+option go_package = "github.com/wignn/micro-3/novel/genproto";
+
+
+message Genre {
+    int32 id = 1;
+    string name = 2;
+    string slug = 3;
+}
+
+message Tag {
+    int32 id = 1;
+    string name = 2;
+    string slug = 3;
+}
+
+message Author {
+    string id = 1;
+    string name = 2;
+    string bio = 3;
+    bytes created_at = 4;
+}
+
+message TranslationGroup {
+    string id = 1;
+    string name = 2;
+    string website_url = 3;
+    string description = 4;
+    bytes created_at = 5;
+}
+
+message Novel {
+    string id = 1;
+    string title = 2;
+    string alternative_title = 3;
+    string description = 4;
+    string cover_image_url = 5;
+    string author_id = 6;
+    string status = 7;
+    string novel_type = 8;
+    string country_of_origin = 9;
+    int32 year_published = 10;
+    int32 total_chapters = 11;
+    double rating_avg = 12;
+    int32 rating_count = 13;
+    int64 view_count = 14;
+    int32 bookmark_count = 15;
+    bytes created_at = 16;
+    bytes updated_at = 17;
+    repeated Genre genres = 18;
+    repeated Tag tags = 19;
+    Author author = 20;
+}
+
+message Chapter {
+    string id = 1;
+    string novel_id = 2;
+    double chapter_number = 3;
+    string title = 4;
+    string translator_group_id = 5;
+    string source_url = 6;
+    bytes created_at = 7;
+    bytes updated_at = 8;
+    TranslationGroup translator_group = 9;
+}
+
+message RankedNovel {
+    int32 rank = 1;
+    Novel novel = 2;
+    double score = 3;
+    int32 change = 4;
+}
+
+// ── Requests / Responses ───────────────
+
+message CreateNovelRequest {
+    string title = 1;
+    string alternative_title = 2;
+    string description = 3;
+    string cover_image_url = 4;
+    string author_id = 5;
+    string status = 6;
+    string novel_type = 7;
+    string country_of_origin = 8;
+    int32 year_published = 9;
+    repeated int32 genre_ids = 10;
+    repeated int32 tag_ids = 11;
+}
+
+message NovelResponse {
+    Novel novel = 1;
+}
+
+message GetNovelRequest {
+    string id = 1;
+}
+
+message ListNovelsRequest {
+    uint64 skip = 1;
+    uint64 take = 2;
+    string query = 3;
+    string status = 4;
+    string novel_type = 5;
+    string country_of_origin = 6;
+    repeated int32 genre_ids = 7;
+    repeated int32 tag_ids = 8;
+    string sort_by = 9;
+    string sort_order = 10;
+}
+
+message ListNovelsResponse {
+    repeated Novel novels = 1;
+}
+
+message UpdateNovelRequest {
+    string id = 1;
+    string title = 2;
+    string alternative_title = 3;
+    string description = 4;
+    string cover_image_url = 5;
+    string author_id = 6;
+    string status = 7;
+    string novel_type = 8;
+    string country_of_origin = 9;
+    int32 year_published = 10;
+    repeated int32 genre_ids = 11;
+    repeated int32 tag_ids = 12;
+}
+
+message DeleteRequest {
+    string id = 1;
+}
+
+message DeleteResponse {
+    string deleted_id = 1;
+    string message = 2;
+    bool success = 3;
+}
+
+// ── Chapter ────────────────────────────
+
+message CreateChapterRequest {
+    string novel_id = 1;
+    double chapter_number = 2;
+    string title = 3;
+    string translator_group_id = 4;
+    string source_url = 5;
+}
+
+message ChapterResponse {
+    Chapter chapter = 1;
+}
+
+message GetChapterRequest {
+    string id = 1;
+}
+
+message ListChaptersRequest {
+    string novel_id = 1;
+    uint64 skip = 2;
+    uint64 take = 3;
+}
+
+message ListChaptersResponse {
+    repeated Chapter chapters = 1;
+}
+
+message UpdateChapterRequest {
+    string id = 1;
+    string novel_id = 2;
+    double chapter_number = 3;
+    string title = 4;
+    string translator_group_id = 5;
+    string source_url = 6;
+}
+
+// ── Author ─────────────────────────────
+
+message CreateAuthorRequest {
+    string name = 1;
+    string bio = 2;
+}
+
+message AuthorResponse {
+    Author author = 1;
+}
+
+message ListAuthorsRequest {
+    uint64 skip = 1;
+    uint64 take = 2;
+    string id = 3;
+}
+
+message ListAuthorsResponse {
+    repeated Author authors = 1;
+}
+
+// ── Translation Group ──────────────────
+
+message CreateTranslationGroupRequest {
+    string name = 1;
+    string website_url = 2;
+    string description = 3;
+}
+
+message TranslationGroupResponse {
+    TranslationGroup group = 1;
+}
+
+message ListTranslationGroupsRequest {
+    uint64 skip = 1;
+    uint64 take = 2;
+}
+
+message ListTranslationGroupsResponse {
+    repeated TranslationGroup groups = 1;
+}
+
+// ── Genre & Tag ────────────────────────
+
+message EmptyRequest {}
+
+message GenreListResponse {
+    repeated Genre genres = 1;
+}
+
+message TagListResponse {
+    repeated Tag tags = 1;
+}
+
+// ── Ranking ────────────────────────────
+
+message RankingRequest {
+    string period = 1;
+    string sort_by = 2;
+    uint64 skip = 3;
+    uint64 take = 4;
+}
+
+message RankingResponse {
+    repeated RankedNovel ranked_novels = 1;
+}
+
+// ── Increment View ─────────────────────
+
+message IncrementViewRequest {
+    string novel_id = 1;
+}
+
+message IncrementViewResponse {
+    int64 view_count = 1;
+}
+
+// ── Service ────────────────────────────
+
+service NovelService {
+    // Novel CRUD
+    rpc CreateNovel(CreateNovelRequest) returns (NovelResponse);
+    rpc GetNovel(GetNovelRequest) returns (NovelResponse);
+    rpc ListNovels(ListNovelsRequest) returns (ListNovelsResponse);
+    rpc UpdateNovel(UpdateNovelRequest) returns (NovelResponse);
+    rpc DeleteNovel(DeleteRequest) returns (DeleteResponse);
+
+    // Chapter CRUD
+    rpc CreateChapter(CreateChapterRequest) returns (ChapterResponse);
+    rpc GetChapter(GetChapterRequest) returns (ChapterResponse);
+    rpc ListChapters(ListChaptersRequest) returns (ListChaptersResponse);
+    rpc UpdateChapter(UpdateChapterRequest) returns (ChapterResponse);
+    rpc DeleteChapter(DeleteRequest) returns (DeleteResponse);
+
+    // Author
+    rpc CreateAuthor(CreateAuthorRequest) returns (AuthorResponse);
+    rpc ListAuthors(ListAuthorsRequest) returns (ListAuthorsResponse);
+
+    // Translation Group
+    rpc CreateTranslationGroup(CreateTranslationGroupRequest) returns (TranslationGroupResponse);
+    rpc ListTranslationGroups(ListTranslationGroupsRequest) returns (ListTranslationGroupsResponse);
+
+    // Genre & Tag
+    rpc GetGenres(EmptyRequest) returns (GenreListResponse);
+    rpc GetTags(EmptyRequest) returns (TagListResponse);
+
+    // Ranking
+    rpc GetRanking(RankingRequest) returns (RankingResponse);
+
+    // View count
+    rpc IncrementViewCount(IncrementViewRequest) returns (IncrementViewResponse);
+}

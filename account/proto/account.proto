@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package genproto;
+
+option go_package = "github.com/wignn/micro-3/account/genproto";
+
+message Account {
+    string id = 1;
+    string name = 2;
+    string email = 3;
+    string avatar_url = 4;
+    string bio = 5;
+    string role = 6;
+    bytes created_at = 7;
+}
+
+message PostAccountRequest {
+    string name = 1;
+    string email = 2;
+    string password = 3;
+}
+
+message PostAccountResponse {
+    Account account = 1;
+}
+
+message GetAccountRequest {
+    string id = 1;
+}
+
+message GetAccountResponse {
+    Account account = 1;
+}
+
+message GetAccountsRequest {
+    uint64 skip = 1;
+    uint64 take = 2;
+}
+
+message GetAccountsResponse {
+    repeated Account accounts = 1;
+}
+
+message DeleteAccountRequest {
+    string id = 1;
+}
+message DeleteAccountResponse {
+    string message = 1;
+    bool success = 2;
+    string deletedID = 3;
+}
+
+message EditAccountRequest {
+    string id = 1;
+    string name = 2;
+    string email = 3;
+    string password = 4;
+    string avatar_url = 5;
+    string bio = 6;
+}
+
+message EditAccountResponse {
+    string message = 1;
+    bool success = 2;
+    Account account = 3;
+}
+
+service AccountService {
+    rpc PostAccount (PostAccountRequest) returns (PostAccountResponse);
+    rpc GetAccount (GetAccountRequest) returns (GetAccountResponse);
+    rpc GetAccounts (GetAccountsRequest) returns (GetAccountsResponse);
+    rpc EditAccount (EditAccountRequest) returns (EditAccountResponse);
+    rpc DeleteAccount (DeleteAccountRequest) returns (DeleteAccountResponse);
+}
