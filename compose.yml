@@ -66,7 +66,7 @@ services:
       context: .
       dockerfile: ./graphql/app.dockerfile
     ports:
-      - 8000:8000
+      - 8001:8000
     depends_on:
       - account
       - novel
@@ -227,7 +227,7 @@ services:
     image: provectuslabs/kafka-ui:v0.7.1
     container_name: kafka-ui
     ports:
-      - 4000:8080
+      - 4001:8080
     depends_on:
       - kafka
       - zookeeper
