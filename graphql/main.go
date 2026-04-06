@@ -16,6 +16,7 @@ type AppConfig struct {
 	ReadingListURL string `envconfig:"READINGLIST_SERVICE_URL"`
 	ReviewURL      string `envconfig:"REVIEW_SERVICE_URL"`
 	AuthURL        string `envconfig:"AUTH_SERVICE_URL"`
+	OriginURL         string `envconfig:"ORIGIN_URL"`
 }
 
 func main() {
@@ -48,8 +49,7 @@ func main() {
 	mux.Handle("/playground", playground.Handler("NovelUpdates GraphQL", "/graphql"))
 	corsHandler := handlers.CORS(
 		handlers.AllowedOrigins([]string{
-			"http://localhost:3000",
-			"http://54.242.132.124:3000",
+			cfg.OriginURL,
 		}),
 		handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"}),
 		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),

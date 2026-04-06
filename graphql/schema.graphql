@@ -1,6 +1,5 @@
 scalar Time
 
-# ── Core Types ──────────────────────────
 type Novel {
   id: String!
   title: String!
