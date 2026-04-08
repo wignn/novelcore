@@ -13,7 +13,6 @@ type queryResolver struct {
 	server *GraphQLServer
 }
 
-// ── Account ────────────────────────────
 
 func (r *queryResolver) Accounts(ctx context.Context, pagination *PaginationInput, id *string) ([]*Account, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
@@ -50,7 +49,6 @@ func (r *queryResolver) Accounts(ctx context.Context, pagination *PaginationInpu
 	return accounts, nil
 }
 
-// ── Novel ──────────────────────────────
 
 func (r *queryResolver) Novels(ctx context.Context, pagination *PaginationInput, id *string, filter *NovelFilterInput, query *string) ([]*Novel, error) {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -110,8 +108,6 @@ func (r *queryResolver) Novels(ctx context.Context, pagination *PaginationInput,
 	return result, nil
 }
 
-// ── Chapter ────────────────────────────
-
 func (r *queryResolver) Chapters(ctx context.Context, novelID string, pagination *PaginationInput) ([]*Chapter, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
@@ -144,8 +140,6 @@ func (r *queryResolver) Chapter(ctx context.Context, id string) (*Chapter, error
 	return protoChapterToGraphQL(ch), nil
 }
 
-// ── Author ─────────────────────────────
-
 func (r *queryResolver) Authors(ctx context.Context, pagination *PaginationInput, id *string) ([]*Author, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
@@ -176,8 +170,6 @@ func (r *queryResolver) Authors(ctx context.Context, pagination *PaginationInput
 	return result, nil
 }
 
-// ── Translation Group ──────────────────
-
 func (r *queryResolver) TranslationGroups(ctx context.Context, pagination *PaginationInput) ([]*TranslationGroup, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
@@ -205,8 +197,6 @@ func (r *queryResolver) TranslationGroups(ctx context.Context, pagination *Pagin
 	}
 	return result, nil
 }
-
-// ── Genre & Tag ────────────────────────
 
 func (r *queryResolver) Genres(ctx context.Context) ([]*Genre, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
@@ -240,8 +230,6 @@ func (r *queryResolver) Tags(ctx context.Context) ([]*Tag, error) {
 	return result, nil
 }
 
-// ── Reading List ───────────────────────
-
 func (r *queryResolver) ReadingList(ctx context.Context, accountID string, status *string, pagination *PaginationInput) ([]*ReadingListEntry, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
@@ -274,8 +262,6 @@ func (r *queryResolver) ReadingList(ctx context.Context, accountID string, statu
 	return result, nil
 }
 
-// ── Review ─────────────────────────────
-
 func (r *queryResolver) Reviews(ctx context.Context, novelID string, pagination *PaginationInput) ([]*Review, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
@@ -307,8 +293,6 @@ func (r *queryResolver) Reviews(ctx context.Context, novelID string, pagination 
 	return result, nil
 }
 
-// ── Ranking ────────────────────────────
-
 func (r *queryResolver) NovelRanking(ctx context.Context, period RankingPeriod, sortBy RankingSortBy, pagination *PaginationInput) ([]*RankedNovel, error) {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
@@ -337,8 +321,6 @@ func (r *queryResolver) NovelRanking(ctx context.Context, period RankingPeriod, 
 	}
 	return result, nil
 }
-
-// ── Helpers ────────────────────────────
 
 func (p PaginationInput) bounds() (uint64, uint64) {
 	skipValue := uint64(0)

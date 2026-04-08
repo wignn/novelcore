@@ -49,6 +49,7 @@ go.work.sum
 coverage.*
 *.coverprofile
 profile.cov
+/docs/memory.txt
 
 # Dependency directories (remove the comment below to include it)
 vendor/

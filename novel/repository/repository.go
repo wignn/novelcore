@@ -299,7 +299,6 @@ func (r *PostgresRepository) DeleteNovel(c context.Context, id string) error {
 	return nil
 }
 
-
 func (r *PostgresRepository) CreateChapter(c context.Context, ch *model.Chapter) error {
 	_, err := r.db.ExecContext(c,
 		`INSERT INTO chapters (id, novel_id, chapter_number, title, translator_group_id, source_url)
@@ -647,6 +646,13 @@ func (r *PostgresRepository) scanNovels(c context.Context, rows *sql.Rows) ([]*m
 		}
 		if yearPublished.Valid {
 			n.YearPublished = yearPublished.Int32
+		}
+
+		if n.AuthorID != "" {
+			author, err := r.GetAuthorByID(c, n.AuthorID)
+			if err == nil {
+				n.Author = author
+			}
 		}
 
 		genres, _ := r.getNovelGenres(c, n.ID)
