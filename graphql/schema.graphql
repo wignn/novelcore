@@ -121,7 +121,6 @@ type DeleteResponse {
   message: String!
 }
 
-# ── Inputs ──────────────────────────────
 input PaginationInput {
   skip: Int
   take: Int
@@ -179,6 +178,11 @@ input TranslationGroupInput {
   description: String
 }
 
+input TagInput {
+  name: String!
+  slug: String
+}
+
 input ReadingListInput {
   novelId: String!
   status: String!
@@ -219,7 +223,6 @@ enum RankingSortBy {
   RATING
 }
 
-# ── Mutations ───────────────────────────
 type Mutation {
   createAccount(account: AccountInput!): Account
   login(account: LoginInput!): authResponse
@@ -237,6 +240,7 @@ type Mutation {
 
   createAuthor(author: AuthorInput!): Author
   createTranslationGroup(group: TranslationGroupInput!): TranslationGroup
+  createTag(tag: TagInput!): Tag
 
   addToReadingList(accountId: String!, entry: ReadingListInput!): ReadingListEntry
   updateReadingList(id: String!, entry: ReadingListInput!): ReadingListEntry
@@ -248,7 +252,6 @@ type Mutation {
   incrementViewCount(novelId: String!): Int!
 }
 
-# ── Queries ─────────────────────────────
 type Query {
   accounts(pagination: PaginationInput, id: String): [Account!]!
   novels(pagination: PaginationInput, id: String, filter: NovelFilterInput, query: String): [Novel!]!

@@ -185,6 +185,11 @@ type Tag struct {
 	Slug string `json:"slug"`
 }
 
+type TagInput struct {
+	Name string  `json:"name"`
+	Slug *string `json:"slug,omitempty"`
+}
+
 type Token struct {
 	AccessToken  string `json:"accessToken"`
 	RefreshToken string `json:"refreshToken"`

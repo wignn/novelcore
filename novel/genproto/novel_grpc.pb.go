@@ -34,6 +34,7 @@ const (
 	NovelService_CreateTranslationGroup_FullMethodName = "/genproto.NovelService/CreateTranslationGroup"
 	NovelService_ListTranslationGroups_FullMethodName  = "/genproto.NovelService/ListTranslationGroups"
 	NovelService_GetGenres_FullMethodName              = "/genproto.NovelService/GetGenres"
+	NovelService_CreateTag_FullMethodName              = "/genproto.NovelService/CreateTag"
 	NovelService_GetTags_FullMethodName                = "/genproto.NovelService/GetTags"
 	NovelService_GetRanking_FullMethodName             = "/genproto.NovelService/GetRanking"
 	NovelService_IncrementViewCount_FullMethodName     = "/genproto.NovelService/IncrementViewCount"
@@ -63,6 +64,7 @@ type NovelServiceClient interface {
 	ListTranslationGroups(ctx context.Context, in *ListTranslationGroupsRequest, opts ...grpc.CallOption) (*ListTranslationGroupsResponse, error)
 	// Genre & Tag
 	GetGenres(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*GenreListResponse, error)
+	CreateTag(ctx context.Context, in *CreateTagRequest, opts ...grpc.CallOption) (*TagResponse, error)
 	GetTags(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*TagListResponse, error)
 	// Ranking
 	GetRanking(ctx context.Context, in *RankingRequest, opts ...grpc.CallOption) (*RankingResponse, error)
@@ -228,6 +230,16 @@ func (c *novelServiceClient) GetGenres(ctx context.Context, in *EmptyRequest, op
 	return out, nil
 }
 
+func (c *novelServiceClient) CreateTag(ctx context.Context, in *CreateTagRequest, opts ...grpc.CallOption) (*TagResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TagResponse)
+	err := c.cc.Invoke(ctx, NovelService_CreateTag_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *novelServiceClient) GetTags(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*TagListResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TagListResponse)
@@ -282,6 +294,7 @@ type NovelServiceServer interface {
 	ListTranslationGroups(context.Context, *ListTranslationGroupsRequest) (*ListTranslationGroupsResponse, error)
 	// Genre & Tag
 	GetGenres(context.Context, *EmptyRequest) (*GenreListResponse, error)
+	CreateTag(context.Context, *CreateTagRequest) (*TagResponse, error)
 	GetTags(context.Context, *EmptyRequest) (*TagListResponse, error)
 	// Ranking
 	GetRanking(context.Context, *RankingRequest) (*RankingResponse, error)
@@ -341,6 +354,9 @@ func (UnimplementedNovelServiceServer) ListTranslationGroups(context.Context, *L
 }
 func (UnimplementedNovelServiceServer) GetGenres(context.Context, *EmptyRequest) (*GenreListResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetGenres not implemented")
+}
+func (UnimplementedNovelServiceServer) CreateTag(context.Context, *CreateTagRequest) (*TagResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateTag not implemented")
 }
 func (UnimplementedNovelServiceServer) GetTags(context.Context, *EmptyRequest) (*TagListResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetTags not implemented")
@@ -642,6 +658,24 @@ func _NovelService_GetGenres_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NovelService_CreateTag_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTagRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NovelServiceServer).CreateTag(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NovelService_CreateTag_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NovelServiceServer).CreateTag(ctx, req.(*CreateTagRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _NovelService_GetTags_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(EmptyRequest)
 	if err := dec(in); err != nil {
@@ -762,6 +796,10 @@ var NovelService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetGenres",
 			Handler:    _NovelService_GetGenres_Handler,
+		},
+		{
+			MethodName: "CreateTag",
+			Handler:    _NovelService_CreateTag_Handler,
 		},
 		{
 			MethodName: "GetTags",

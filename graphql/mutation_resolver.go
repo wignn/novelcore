@@ -127,7 +127,6 @@ func (r *mutationResolver) DeleteAccount(c context.Context, id string) (*DeleteR
 	}, nil
 }
 
-// ── Novel ──────────────────────────────
 
 func (r *mutationResolver) CreateNovel(c context.Context, in NovelInput) (*Novel, error) {
 	c, cancel := context.WithTimeout(c, 5*time.Second)
@@ -236,7 +235,6 @@ func (r *mutationResolver) DeleteNovel(c context.Context, id string) (*DeleteRes
 	return &DeleteResponse{DeletedID: res.DeletedId, Success: res.Success, Message: res.Message}, nil
 }
 
-// ── Chapter ────────────────────────────
 
 func (r *mutationResolver) CreateChapter(c context.Context, in ChapterInput) (*Chapter, error) {
 	c, cancel := context.WithTimeout(c, 3*time.Second)
@@ -303,7 +301,6 @@ func (r *mutationResolver) DeleteChapter(c context.Context, id string) (*DeleteR
 	return &DeleteResponse{DeletedID: res.DeletedId, Success: res.Success, Message: res.Message}, nil
 }
 
-// ── Author ─────────────────────────────
 
 func (r *mutationResolver) CreateAuthor(c context.Context, in AuthorInput) (*Author, error) {
 	c, cancel := context.WithTimeout(c, 3*time.Second)
@@ -325,6 +322,23 @@ func (r *mutationResolver) CreateAuthor(c context.Context, in AuthorInput) (*Aut
 	}
 
 	return &Author{ID: a.Id, Name: a.Name, Bio: &a.Bio, CreatedAt: createdAt}, nil
+}
+
+func (r *mutationResolver) CreateTag(c context.Context, in TagInput) (*Tag, error) {
+	c, cancel := context.WithTimeout(c, 3*time.Second)
+	defer cancel()
+
+	slug := ""
+	if in.Slug != nil {
+		slug = *in.Slug
+	}
+
+	t, err := r.server.novelClient.CreateTag(c, in.Name, slug)
+	if err != nil {
+		return nil, handleError("CreateTag", err)
+	}
+
+	return &Tag{ID: int(t.Id), Name: t.Name, Slug: t.Slug}, nil
 }
 
 // ── Translation Group ──────────────────
@@ -443,7 +457,6 @@ func (r *mutationResolver) RemoveFromReadingList(c context.Context, id string) (
 	return &DeleteResponse{DeletedID: res.DeletedId, Success: res.Success, Message: res.Message}, nil
 }
 
-// ── Review ─────────────────────────────
 
 func (r *mutationResolver) CreateReview(c context.Context, in ReviewInput) (*Review, error) {
 	c, cancel := context.WithTimeout(c, 3*time.Second)
@@ -489,7 +502,6 @@ func (r *mutationResolver) DeleteReview(c context.Context, id string) (*DeleteRe
 	return &DeleteResponse{DeletedID: res.DeletedId, Success: res.Success, Message: res.Message}, nil
 }
 
-// ── View Count ─────────────────────────
 
 func (r *mutationResolver) IncrementViewCount(c context.Context, novelID string) (int, error) {
 	c, cancel := context.WithTimeout(c, 3*time.Second)
@@ -503,7 +515,6 @@ func (r *mutationResolver) IncrementViewCount(c context.Context, novelID string)
 	return int(count), nil
 }
 
-// ── Helpers ────────────────────────────
 
 func protoNovelToGraphQL(n *novelGenproto.Novel) *Novel {
 	if n == nil {
@@ -565,7 +576,7 @@ func protoNovelToGraphQL(n *novelGenproto.Novel) *Novel {
 	}
 
 	log.Printf("Novel %s (%s) converted", n.Id, n.Title)
-	_ = strings.ToLower // keep import
+	_ = strings.ToLower 
 
 	return novel
 }

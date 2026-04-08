@@ -74,7 +74,6 @@ message RankedNovel {
     int32 change = 4;
 }
 
-// ── Requests / Responses ───────────────
 
 message CreateNovelRequest {
     string title = 1;
@@ -140,7 +139,6 @@ message DeleteResponse {
     bool success = 3;
 }
 
-// ── Chapter ────────────────────────────
 
 message CreateChapterRequest {
     string novel_id = 1;
@@ -177,8 +175,6 @@ message UpdateChapterRequest {
     string source_url = 6;
 }
 
-// ── Author ─────────────────────────────
-
 message CreateAuthorRequest {
     string name = 1;
     string bio = 2;
@@ -198,7 +194,6 @@ message ListAuthorsResponse {
     repeated Author authors = 1;
 }
 
-// ── Translation Group ──────────────────
 
 message CreateTranslationGroupRequest {
     string name = 1;
@@ -219,7 +214,6 @@ message ListTranslationGroupsResponse {
     repeated TranslationGroup groups = 1;
 }
 
-// ── Genre & Tag ────────────────────────
 
 message EmptyRequest {}
 
@@ -231,7 +225,14 @@ message TagListResponse {
     repeated Tag tags = 1;
 }
 
-// ── Ranking ────────────────────────────
+message CreateTagRequest {
+    string name = 1;
+    string slug = 2;
+}
+
+message TagResponse {
+    Tag tag = 1;
+}
 
 message RankingRequest {
     string period = 1;
@@ -244,8 +245,6 @@ message RankingResponse {
     repeated RankedNovel ranked_novels = 1;
 }
 
-// ── Increment View ─────────────────────
-
 message IncrementViewRequest {
     string novel_id = 1;
 }
@@ -254,7 +253,6 @@ message IncrementViewResponse {
     int64 view_count = 1;
 }
 
-// ── Service ────────────────────────────
 
 service NovelService {
     // Novel CRUD
@@ -281,6 +279,7 @@ service NovelService {
 
     // Genre & Tag
     rpc GetGenres(EmptyRequest) returns (GenreListResponse);
+    rpc CreateTag(CreateTagRequest) returns (TagResponse);
     rpc GetTags(EmptyRequest) returns (TagListResponse);
 
     // Ranking

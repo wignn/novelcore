@@ -29,7 +29,6 @@ func (cl *NovelClient) Close() {
 	cl.conn.Close()
 }
 
-// ── Novel ──────────────────────────────
 
 func (cl *NovelClient) CreateNovel(c context.Context, req *genproto.CreateNovelRequest) (*genproto.Novel, error) {
 	r, err := cl.service.CreateNovel(c, req)
@@ -68,7 +67,6 @@ func (cl *NovelClient) DeleteNovel(c context.Context, id string) (*genproto.Dele
 	return cl.service.DeleteNovel(c, &genproto.DeleteRequest{Id: id})
 }
 
-// ── Chapter ────────────────────────────
 
 func (cl *NovelClient) CreateChapter(c context.Context, req *genproto.CreateChapterRequest) (*genproto.Chapter, error) {
 	r, err := cl.service.CreateChapter(c, req)
@@ -108,8 +106,6 @@ func (cl *NovelClient) DeleteChapter(c context.Context, id string) (*genproto.De
 	return cl.service.DeleteChapter(c, &genproto.DeleteRequest{Id: id})
 }
 
-// ── Author ─────────────────────────────
-
 func (cl *NovelClient) CreateAuthor(c context.Context, name, bio string) (*genproto.Author, error) {
 	r, err := cl.service.CreateAuthor(c, &genproto.CreateAuthorRequest{Name: name, Bio: bio})
 	if err != nil {
@@ -125,8 +121,6 @@ func (cl *NovelClient) ListAuthors(c context.Context, skip, take uint64, id stri
 	}
 	return r.Authors, nil
 }
-
-// ── Translation Group ──────────────────
 
 func (cl *NovelClient) CreateTranslationGroup(c context.Context, name, websiteURL, desc string) (*genproto.TranslationGroup, error) {
 	r, err := cl.service.CreateTranslationGroup(c, &genproto.CreateTranslationGroupRequest{
@@ -146,14 +140,20 @@ func (cl *NovelClient) ListTranslationGroups(c context.Context, skip, take uint6
 	return r.Groups, nil
 }
 
-// ── Genre & Tag ────────────────────────
-
 func (cl *NovelClient) GetGenres(c context.Context) ([]*genproto.Genre, error) {
 	r, err := cl.service.GetGenres(c, &genproto.EmptyRequest{})
 	if err != nil {
 		return nil, err
 	}
 	return r.Genres, nil
+}
+
+func (cl *NovelClient) CreateTag(c context.Context, name, slug string) (*genproto.Tag, error) {
+	r, err := cl.service.CreateTag(c, &genproto.CreateTagRequest{Name: name, Slug: slug})
+	if err != nil {
+		return nil, err
+	}
+	return r.Tag, nil
 }
 
 func (cl *NovelClient) GetTags(c context.Context) ([]*genproto.Tag, error) {
@@ -163,8 +163,6 @@ func (cl *NovelClient) GetTags(c context.Context) ([]*genproto.Tag, error) {
 	}
 	return r.Tags, nil
 }
-
-// ── Ranking ────────────────────────────
 
 func (cl *NovelClient) GetRanking(c context.Context, period, sortBy string, skip, take uint64) ([]*genproto.RankedNovel, error) {
 	r, err := cl.service.GetRanking(c, &genproto.RankingRequest{
@@ -176,8 +174,6 @@ func (cl *NovelClient) GetRanking(c context.Context, period, sortBy string, skip
 	return r.RankedNovels, nil
 }
 
-// ── View ───────────────────────────────
-
 func (cl *NovelClient) IncrementViewCount(c context.Context, novelID string) (int64, error) {
 	r, err := cl.service.IncrementViewCount(c, &genproto.IncrementViewRequest{NovelId: novelID})
 	if err != nil {
@@ -185,8 +181,6 @@ func (cl *NovelClient) IncrementViewCount(c context.Context, novelID string) (in
 	}
 	return r.ViewCount, nil
 }
-
-// ── Helpers ────────────────────────────
 
 func ProtoToNovelModel(n *genproto.Novel) *model.Novel {
 	if n == nil {

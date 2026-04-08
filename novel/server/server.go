@@ -29,8 +29,6 @@ func ListenGRPC(s service.NovelService, port int) error {
 	return serv.Serve(lis)
 }
 
-// ── Novel ──────────────────────────────
-
 func (s *grpcServer) CreateNovel(c context.Context, req *genproto.CreateNovelRequest) (*genproto.NovelResponse, error) {
 	n, err := s.service.CreateNovel(c, req.Title, req.AlternativeTitle, req.Description,
 		req.CoverImageUrl, req.AuthorId, req.Status, req.NovelType, req.CountryOfOrigin,
@@ -80,8 +78,6 @@ func (s *grpcServer) DeleteNovel(c context.Context, req *genproto.DeleteRequest)
 	return &genproto.DeleteResponse{DeletedId: req.Id, Message: "Novel deleted", Success: true}, nil
 }
 
-// ── Chapter ────────────────────────────
-
 func (s *grpcServer) CreateChapter(c context.Context, req *genproto.CreateChapterRequest) (*genproto.ChapterResponse, error) {
 	ch, err := s.service.CreateChapter(c, req.NovelId, req.ChapterNumber, req.Title, req.TranslatorGroupId, req.SourceUrl)
 	if err != nil {
@@ -125,8 +121,6 @@ func (s *grpcServer) DeleteChapter(c context.Context, req *genproto.DeleteReques
 	return &genproto.DeleteResponse{DeletedId: req.Id, Message: "Chapter deleted", Success: true}, nil
 }
 
-// ── Author ─────────────────────────────
-
 func (s *grpcServer) CreateAuthor(c context.Context, req *genproto.CreateAuthorRequest) (*genproto.AuthorResponse, error) {
 	a, err := s.service.CreateAuthor(c, req.Name, req.Bio)
 	if err != nil {
@@ -152,8 +146,6 @@ func (s *grpcServer) ListAuthors(c context.Context, req *genproto.ListAuthorsReq
 	}
 	return &genproto.ListAuthorsResponse{Authors: protoAuthors}, nil
 }
-
-// ── Translation Group ──────────────────
 
 func (s *grpcServer) CreateTranslationGroup(c context.Context, req *genproto.CreateTranslationGroupRequest) (*genproto.TranslationGroupResponse, error) {
 	g, err := s.service.CreateTranslationGroup(c, req.Name, req.WebsiteUrl, req.Description)
@@ -183,8 +175,6 @@ func (s *grpcServer) ListTranslationGroups(c context.Context, req *genproto.List
 	return &genproto.ListTranslationGroupsResponse{Groups: protoGroups}, nil
 }
 
-// ── Genre & Tag ────────────────────────
-
 func (s *grpcServer) GetGenres(c context.Context, _ *genproto.EmptyRequest) (*genproto.GenreListResponse, error) {
 	genres, err := s.service.GetGenres(c)
 	if err != nil {
@@ -195,6 +185,15 @@ func (s *grpcServer) GetGenres(c context.Context, _ *genproto.EmptyRequest) (*ge
 		protoGenres = append(protoGenres, &genproto.Genre{Id: g.ID, Name: g.Name, Slug: g.Slug})
 	}
 	return &genproto.GenreListResponse{Genres: protoGenres}, nil
+}
+
+func (s *grpcServer) CreateTag(c context.Context, req *genproto.CreateTagRequest) (*genproto.TagResponse, error) {
+	t, err := s.service.CreateTag(c, req.Name, req.Slug)
+	if err != nil {
+		return nil, err
+	}
+
+	return &genproto.TagResponse{Tag: &genproto.Tag{Id: t.ID, Name: t.Name, Slug: t.Slug}}, nil
 }
 
 func (s *grpcServer) GetTags(c context.Context, _ *genproto.EmptyRequest) (*genproto.TagListResponse, error) {
@@ -209,7 +208,6 @@ func (s *grpcServer) GetTags(c context.Context, _ *genproto.EmptyRequest) (*genp
 	return &genproto.TagListResponse{Tags: protoTags}, nil
 }
 
-// ── Ranking ────────────────────────────
 
 func (s *grpcServer) GetRanking(c context.Context, req *genproto.RankingRequest) (*genproto.RankingResponse, error) {
 	novels, err := s.service.GetRanking(c, req.Period, req.SortBy, req.Skip, req.Take)
@@ -227,8 +225,6 @@ func (s *grpcServer) GetRanking(c context.Context, req *genproto.RankingRequest)
 	return &genproto.RankingResponse{RankedNovels: ranked}, nil
 }
 
-// ── View ───────────────────────────────
-
 func (s *grpcServer) IncrementViewCount(c context.Context, req *genproto.IncrementViewRequest) (*genproto.IncrementViewResponse, error) {
 	count, err := s.service.IncrementViewCount(c, req.NovelId)
 	if err != nil {
@@ -236,8 +232,6 @@ func (s *grpcServer) IncrementViewCount(c context.Context, req *genproto.Increme
 	}
 	return &genproto.IncrementViewResponse{ViewCount: count}, nil
 }
-
-// ── Proto converters ───────────────────
 
 func novelToProto(n *model.Novel) *genproto.Novel {
 	if n == nil {
@@ -248,23 +242,23 @@ func novelToProto(n *model.Novel) *genproto.Novel {
 	updatedAt, _ := n.UpdatedAt.MarshalBinary()
 
 	p := &genproto.Novel{
-		Id:              n.ID,
-		Title:           n.Title,
+		Id:               n.ID,
+		Title:            n.Title,
 		AlternativeTitle: n.AlternativeTitle,
-		Description:     n.Description,
-		CoverImageUrl:   n.CoverImageURL,
-		AuthorId:        n.AuthorID,
-		Status:          n.Status,
-		NovelType:       n.NovelType,
-		CountryOfOrigin: n.CountryOfOrigin,
-		YearPublished:   n.YearPublished,
-		TotalChapters:   n.TotalChapters,
-		RatingAvg:       n.RatingAvg,
-		RatingCount:     n.RatingCount,
-		ViewCount:       n.ViewCount,
-		BookmarkCount:   n.BookmarkCount,
-		CreatedAt:       createdAt,
-		UpdatedAt:       updatedAt,
+		Description:      n.Description,
+		CoverImageUrl:    n.CoverImageURL,
+		AuthorId:         n.AuthorID,
+		Status:           n.Status,
+		NovelType:        n.NovelType,
+		CountryOfOrigin:  n.CountryOfOrigin,
+		YearPublished:    n.YearPublished,
+		TotalChapters:    n.TotalChapters,
+		RatingAvg:        n.RatingAvg,
+		RatingCount:      n.RatingCount,
+		ViewCount:        n.ViewCount,
+		BookmarkCount:    n.BookmarkCount,
+		CreatedAt:        createdAt,
+		UpdatedAt:        updatedAt,
 	}
 
 	for _, g := range n.Genres {

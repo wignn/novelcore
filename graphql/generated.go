@@ -96,6 +96,7 @@ type ComplexityRoot struct {
 		CreateChapter          func(childComplexity int, chapter ChapterInput) int
 		CreateNovel            func(childComplexity int, novel NovelInput) int
 		CreateReview           func(childComplexity int, review ReviewInput) int
+		CreateTag              func(childComplexity int, tag TagInput) int
 		CreateTranslationGroup func(childComplexity int, group TranslationGroupInput) int
 		DeleteAccount          func(childComplexity int, id string) int
 		DeleteChapter          func(childComplexity int, id string) int
@@ -223,6 +224,7 @@ type MutationResolver interface {
 	DeleteChapter(ctx context.Context, id string) (*DeleteResponse, error)
 	CreateAuthor(ctx context.Context, author AuthorInput) (*Author, error)
 	CreateTranslationGroup(ctx context.Context, group TranslationGroupInput) (*TranslationGroup, error)
+	CreateTag(ctx context.Context, tag TagInput) (*Tag, error)
 	AddToReadingList(ctx context.Context, accountID string, entry ReadingListInput) (*ReadingListEntry, error)
 	UpdateReadingList(ctx context.Context, id string, entry ReadingListInput) (*ReadingListEntry, error)
 	RemoveFromReadingList(ctx context.Context, id string) (*DeleteResponse, error)
@@ -516,6 +518,18 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 		}
 
 		return e.complexity.Mutation.CreateReview(childComplexity, args["review"].(ReviewInput)), true
+
+	case "Mutation.createTag":
+		if e.complexity.Mutation.CreateTag == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createTag_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateTag(childComplexity, args["tag"].(TagInput)), true
 
 	case "Mutation.createTranslationGroup":
 		if e.complexity.Mutation.CreateTranslationGroup == nil {
@@ -1205,6 +1219,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputPaginationInput,
 		ec.unmarshalInputReadingListInput,
 		ec.unmarshalInputReviewInput,
+		ec.unmarshalInputTagInput,
 		ec.unmarshalInputTranslationGroupInput,
 	)
 	first := true
@@ -1510,6 +1525,34 @@ func (ec *executionContext) field_Mutation_createReview_argsReview(
 	}
 
 	var zeroVal ReviewInput
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_createTag_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_createTag_argsTag(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["tag"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_createTag_argsTag(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (TagInput, error) {
+	if _, ok := rawArgs["tag"]; !ok {
+		var zeroVal TagInput
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("tag"))
+	if tmp, ok := rawArgs["tag"]; ok {
+		return ec.unmarshalNTagInput2githubᚗcomᚋwignnᚋmicroᚑ3ᚋgraphqlᚐTagInput(ctx, tmp)
+	}
+
+	var zeroVal TagInput
 	return zeroVal, nil
 }
 
@@ -4661,6 +4704,66 @@ func (ec *executionContext) fieldContext_Mutation_createTranslationGroup(ctx con
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createTranslationGroup_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createTag(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createTag(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateTag(rctx, fc.Args["tag"].(TagInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*Tag)
+	fc.Result = res
+	return ec.marshalOTag2ᚖgithubᚗcomᚋwignnᚋmicroᚑ3ᚋgraphqlᚐTag(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createTag(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Tag_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Tag_name(ctx, field)
+			case "slug":
+				return ec.fieldContext_Tag_slug(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Tag", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createTag_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -10954,6 +11057,40 @@ func (ec *executionContext) unmarshalInputReviewInput(ctx context.Context, obj a
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputTagInput(ctx context.Context, obj any) (TagInput, error) {
+	var it TagInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"name", "slug"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "name":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Name = data
+		case "slug":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Slug = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputTranslationGroupInput(ctx context.Context, obj any) (TranslationGroupInput, error) {
 	var it TranslationGroupInput
 	asMap := map[string]any{}
@@ -11395,6 +11532,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "createTranslationGroup":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createTranslationGroup(ctx, field)
+			})
+		case "createTag":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createTag(ctx, field)
 			})
 		case "addToReadingList":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -13229,6 +13370,11 @@ func (ec *executionContext) marshalNTag2ᚖgithubᚗcomᚋwignnᚋmicroᚑ3ᚋgr
 	return ec._Tag(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNTagInput2githubᚗcomᚋwignnᚋmicroᚑ3ᚋgraphqlᚐTagInput(ctx context.Context, v any) (TagInput, error) {
+	res, err := ec.unmarshalInputTagInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNTime2timeᚐTime(ctx context.Context, v any) (time.Time, error) {
 	res, err := graphql.UnmarshalTime(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -13742,6 +13888,13 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	_ = ctx
 	res := graphql.MarshalString(*v)
 	return res
+}
+
+func (ec *executionContext) marshalOTag2ᚖgithubᚗcomᚋwignnᚋmicroᚑ3ᚋgraphqlᚐTag(ctx context.Context, sel ast.SelectionSet, v *Tag) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Tag(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOToken2ᚖgithubᚗcomᚋwignnᚋmicroᚑ3ᚋgraphqlᚐToken(ctx context.Context, sel ast.SelectionSet, v *Token) graphql.Marshaler {

@@ -16,7 +16,6 @@ COPY auth auth
 
 RUN GO111MODULE=on go build -mod vendor -o /go/bin/app ./graphql
 
-# Runtime image
 FROM alpine:3.21
 
 WORKDIR /usr/bin

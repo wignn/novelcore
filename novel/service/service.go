@@ -2,11 +2,16 @@ package service
 
 import (
 	"context"
+	"errors"
+	"strings"
+	"unicode"
 
 	"github.com/segmentio/ksuid"
 	"github.com/wignn/micro-3/novel/model"
 	"github.com/wignn/micro-3/novel/repository"
 )
+
+var ErrInvalidTagName = errors.New("tag name is required")
 
 type NovelService interface {
 	// Novel
@@ -33,6 +38,7 @@ type NovelService interface {
 
 	// Genre & Tag
 	GetGenres(c context.Context) ([]model.Genre, error)
+	CreateTag(c context.Context, name, slug string) (*model.Tag, error)
 	GetTags(c context.Context) ([]model.Tag, error)
 
 	// Ranking
@@ -49,8 +55,6 @@ type novelService struct {
 func NewNovelService(r repository.NovelRepository) NovelService {
 	return &novelService{repo: r}
 }
-
-// ── Novel ──────────────────────────────
 
 func (s *novelService) CreateNovel(c context.Context, title, altTitle, description, coverURL, authorID, status, novelType, country string, year int32, genreIDs, tagIDs []int32) (*model.Novel, error) {
 	if status == "" {
@@ -121,8 +125,6 @@ func (s *novelService) DeleteNovel(c context.Context, id string) error {
 	return s.repo.DeleteNovel(c, id)
 }
 
-// ── Chapter ────────────────────────────
-
 func (s *novelService) CreateChapter(c context.Context, novelID string, chapterNumber float64, title, translatorGroupID, sourceURL string) (*model.Chapter, error) {
 	ch := &model.Chapter{
 		ID:                ksuid.New().String(),
@@ -172,8 +174,6 @@ func (s *novelService) DeleteChapter(c context.Context, id string) error {
 	return s.repo.DeleteChapter(c, id)
 }
 
-// ── Author ─────────────────────────────
-
 func (s *novelService) CreateAuthor(c context.Context, name, bio string) (*model.Author, error) {
 	a := &model.Author{
 		ID:   ksuid.New().String(),
@@ -203,8 +203,6 @@ func (s *novelService) ListAuthors(c context.Context, skip, take uint64, id stri
 	return s.repo.ListAuthors(c, skip, take)
 }
 
-// ── Translation Group ──────────────────
-
 func (s *novelService) CreateTranslationGroup(c context.Context, name, websiteURL, description string) (*model.TranslationGroup, error) {
 	g := &model.TranslationGroup{
 		ID:          ksuid.New().String(),
@@ -227,17 +225,44 @@ func (s *novelService) ListTranslationGroups(c context.Context, skip, take uint6
 	return s.repo.ListTranslationGroups(c, skip, take)
 }
 
-// ── Genre & Tag ────────────────────────
-
 func (s *novelService) GetGenres(c context.Context) ([]model.Genre, error) {
 	return s.repo.GetGenres(c)
+}
+
+func (s *novelService) CreateTag(c context.Context, name, slug string) (*model.Tag, error) {
+	name = strings.TrimSpace(name)
+	if name == "" {
+		return nil, ErrInvalidTagName
+	}
+
+	slug = strings.TrimSpace(slug)
+	if slug == "" {
+		slug = toSlug(name)
+	}
+
+	return s.repo.CreateTag(c, name, slug)
 }
 
 func (s *novelService) GetTags(c context.Context) ([]model.Tag, error) {
 	return s.repo.GetTags(c)
 }
 
-// ── Ranking ────────────────────────────
+func toSlug(s string) string {
+	s = strings.ToLower(strings.TrimSpace(s))
+	var b strings.Builder
+	prevDash := false
+	for _, r := range s {
+		switch {
+		case unicode.IsLetter(r) || unicode.IsDigit(r):
+			b.WriteRune(r)
+			prevDash = false
+		case !prevDash:
+			b.WriteByte('-')
+			prevDash = true
+		}
+	}
+	return strings.Trim(b.String(), "-")
+}
 
 func (s *novelService) GetRanking(c context.Context, period, sortBy string, skip, take uint64) ([]*model.Novel, error) {
 	if take > 100 || (take == 0 && skip == 0) {
@@ -245,8 +270,6 @@ func (s *novelService) GetRanking(c context.Context, period, sortBy string, skip
 	}
 	return s.repo.GetRanking(c, period, sortBy, skip, take)
 }
-
-// ── View ───────────────────────────────
 
 func (s *novelService) IncrementViewCount(c context.Context, novelID string) (int64, error) {
 	return s.repo.IncrementViewCount(c, novelID)

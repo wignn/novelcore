@@ -2141,6 +2141,102 @@ func (x *TagListResponse) GetTags() []*Tag {
 	return nil
 }
 
+type CreateTagRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Slug          string                 `protobuf:"bytes,2,opt,name=slug,proto3" json:"slug,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateTagRequest) Reset() {
+	*x = CreateTagRequest{}
+	mi := &file_novel_proto_msgTypes[32]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateTagRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateTagRequest) ProtoMessage() {}
+
+func (x *CreateTagRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_novel_proto_msgTypes[32]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateTagRequest.ProtoReflect.Descriptor instead.
+func (*CreateTagRequest) Descriptor() ([]byte, []int) {
+	return file_novel_proto_rawDescGZIP(), []int{32}
+}
+
+func (x *CreateTagRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *CreateTagRequest) GetSlug() string {
+	if x != nil {
+		return x.Slug
+	}
+	return ""
+}
+
+type TagResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Tag           *Tag                   `protobuf:"bytes,1,opt,name=tag,proto3" json:"tag,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TagResponse) Reset() {
+	*x = TagResponse{}
+	mi := &file_novel_proto_msgTypes[33]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TagResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TagResponse) ProtoMessage() {}
+
+func (x *TagResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_novel_proto_msgTypes[33]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TagResponse.ProtoReflect.Descriptor instead.
+func (*TagResponse) Descriptor() ([]byte, []int) {
+	return file_novel_proto_rawDescGZIP(), []int{33}
+}
+
+func (x *TagResponse) GetTag() *Tag {
+	if x != nil {
+		return x.Tag
+	}
+	return nil
+}
+
 type RankingRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Period        string                 `protobuf:"bytes,1,opt,name=period,proto3" json:"period,omitempty"`
@@ -2153,7 +2249,7 @@ type RankingRequest struct {
 
 func (x *RankingRequest) Reset() {
 	*x = RankingRequest{}
-	mi := &file_novel_proto_msgTypes[32]
+	mi := &file_novel_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2165,7 +2261,7 @@ func (x *RankingRequest) String() string {
 func (*RankingRequest) ProtoMessage() {}
 
 func (x *RankingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_novel_proto_msgTypes[32]
+	mi := &file_novel_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2178,7 +2274,7 @@ func (x *RankingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RankingRequest.ProtoReflect.Descriptor instead.
 func (*RankingRequest) Descriptor() ([]byte, []int) {
-	return file_novel_proto_rawDescGZIP(), []int{32}
+	return file_novel_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *RankingRequest) GetPeriod() string {
@@ -2218,7 +2314,7 @@ type RankingResponse struct {
 
 func (x *RankingResponse) Reset() {
 	*x = RankingResponse{}
-	mi := &file_novel_proto_msgTypes[33]
+	mi := &file_novel_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2230,7 +2326,7 @@ func (x *RankingResponse) String() string {
 func (*RankingResponse) ProtoMessage() {}
 
 func (x *RankingResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_novel_proto_msgTypes[33]
+	mi := &file_novel_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2243,7 +2339,7 @@ func (x *RankingResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RankingResponse.ProtoReflect.Descriptor instead.
 func (*RankingResponse) Descriptor() ([]byte, []int) {
-	return file_novel_proto_rawDescGZIP(), []int{33}
+	return file_novel_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *RankingResponse) GetRankedNovels() []*RankedNovel {
@@ -2262,7 +2358,7 @@ type IncrementViewRequest struct {
 
 func (x *IncrementViewRequest) Reset() {
 	*x = IncrementViewRequest{}
-	mi := &file_novel_proto_msgTypes[34]
+	mi := &file_novel_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2274,7 +2370,7 @@ func (x *IncrementViewRequest) String() string {
 func (*IncrementViewRequest) ProtoMessage() {}
 
 func (x *IncrementViewRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_novel_proto_msgTypes[34]
+	mi := &file_novel_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2287,7 +2383,7 @@ func (x *IncrementViewRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IncrementViewRequest.ProtoReflect.Descriptor instead.
 func (*IncrementViewRequest) Descriptor() ([]byte, []int) {
-	return file_novel_proto_rawDescGZIP(), []int{34}
+	return file_novel_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *IncrementViewRequest) GetNovelId() string {
@@ -2306,7 +2402,7 @@ type IncrementViewResponse struct {
 
 func (x *IncrementViewResponse) Reset() {
 	*x = IncrementViewResponse{}
-	mi := &file_novel_proto_msgTypes[35]
+	mi := &file_novel_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2318,7 +2414,7 @@ func (x *IncrementViewResponse) String() string {
 func (*IncrementViewResponse) ProtoMessage() {}
 
 func (x *IncrementViewResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_novel_proto_msgTypes[35]
+	mi := &file_novel_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2331,7 +2427,7 @@ func (x *IncrementViewResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IncrementViewResponse.ProtoReflect.Descriptor instead.
 func (*IncrementViewResponse) Descriptor() ([]byte, []int) {
-	return file_novel_proto_rawDescGZIP(), []int{35}
+	return file_novel_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *IncrementViewResponse) GetViewCount() int64 {
@@ -2521,7 +2617,12 @@ const file_novel_proto_rawDesc = "" +
 	"\x11GenreListResponse\x12'\n" +
 	"\x06genres\x18\x01 \x03(\v2\x0f.genproto.GenreR\x06genres\"4\n" +
 	"\x0fTagListResponse\x12!\n" +
-	"\x04tags\x18\x01 \x03(\v2\r.genproto.TagR\x04tags\"i\n" +
+	"\x04tags\x18\x01 \x03(\v2\r.genproto.TagR\x04tags\":\n" +
+	"\x10CreateTagRequest\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
+	"\x04slug\x18\x02 \x01(\tR\x04slug\".\n" +
+	"\vTagResponse\x12\x1f\n" +
+	"\x03tag\x18\x01 \x01(\v2\r.genproto.TagR\x03tag\"i\n" +
 	"\x0eRankingRequest\x12\x16\n" +
 	"\x06period\x18\x01 \x01(\tR\x06period\x12\x17\n" +
 	"\asort_by\x18\x02 \x01(\tR\x06sortBy\x12\x12\n" +
@@ -2533,8 +2634,7 @@ const file_novel_proto_rawDesc = "" +
 	"\bnovel_id\x18\x01 \x01(\tR\anovelId\"6\n" +
 	"\x15IncrementViewResponse\x12\x1d\n" +
 	"\n" +
-	"view_count\x18\x01 \x01(\x03R\tviewCount2\xd6\n" +
-	"\n" +
+	"view_count\x18\x01 \x01(\x03R\tviewCount2\x96\v\n" +
 	"\fNovelService\x12D\n" +
 	"\vCreateNovel\x12\x1c.genproto.CreateNovelRequest\x1a\x17.genproto.NovelResponse\x12>\n" +
 	"\bGetNovel\x12\x19.genproto.GetNovelRequest\x1a\x17.genproto.NovelResponse\x12G\n" +
@@ -2552,7 +2652,8 @@ const file_novel_proto_rawDesc = "" +
 	"\vListAuthors\x12\x1c.genproto.ListAuthorsRequest\x1a\x1d.genproto.ListAuthorsResponse\x12e\n" +
 	"\x16CreateTranslationGroup\x12'.genproto.CreateTranslationGroupRequest\x1a\".genproto.TranslationGroupResponse\x12h\n" +
 	"\x15ListTranslationGroups\x12&.genproto.ListTranslationGroupsRequest\x1a'.genproto.ListTranslationGroupsResponse\x12@\n" +
-	"\tGetGenres\x12\x16.genproto.EmptyRequest\x1a\x1b.genproto.GenreListResponse\x12<\n" +
+	"\tGetGenres\x12\x16.genproto.EmptyRequest\x1a\x1b.genproto.GenreListResponse\x12>\n" +
+	"\tCreateTag\x12\x1a.genproto.CreateTagRequest\x1a\x15.genproto.TagResponse\x12<\n" +
 	"\aGetTags\x12\x16.genproto.EmptyRequest\x1a\x19.genproto.TagListResponse\x12A\n" +
 	"\n" +
 	"GetRanking\x12\x18.genproto.RankingRequest\x1a\x19.genproto.RankingResponse\x12U\n" +
@@ -2570,7 +2671,7 @@ func file_novel_proto_rawDescGZIP() []byte {
 	return file_novel_proto_rawDescData
 }
 
-var file_novel_proto_msgTypes = make([]protoimpl.MessageInfo, 36)
+var file_novel_proto_msgTypes = make([]protoimpl.MessageInfo, 38)
 var file_novel_proto_goTypes = []any{
 	(*Genre)(nil),                         // 0: genproto.Genre
 	(*Tag)(nil),                           // 1: genproto.Tag
@@ -2604,10 +2705,12 @@ var file_novel_proto_goTypes = []any{
 	(*EmptyRequest)(nil),                  // 29: genproto.EmptyRequest
 	(*GenreListResponse)(nil),             // 30: genproto.GenreListResponse
 	(*TagListResponse)(nil),               // 31: genproto.TagListResponse
-	(*RankingRequest)(nil),                // 32: genproto.RankingRequest
-	(*RankingResponse)(nil),               // 33: genproto.RankingResponse
-	(*IncrementViewRequest)(nil),          // 34: genproto.IncrementViewRequest
-	(*IncrementViewResponse)(nil),         // 35: genproto.IncrementViewResponse
+	(*CreateTagRequest)(nil),              // 32: genproto.CreateTagRequest
+	(*TagResponse)(nil),                   // 33: genproto.TagResponse
+	(*RankingRequest)(nil),                // 34: genproto.RankingRequest
+	(*RankingResponse)(nil),               // 35: genproto.RankingResponse
+	(*IncrementViewRequest)(nil),          // 36: genproto.IncrementViewRequest
+	(*IncrementViewResponse)(nil),         // 37: genproto.IncrementViewResponse
 }
 var file_novel_proto_depIdxs = []int32{
 	0,  // 0: genproto.Novel.genres:type_name -> genproto.Genre
@@ -2625,48 +2728,51 @@ var file_novel_proto_depIdxs = []int32{
 	3,  // 12: genproto.ListTranslationGroupsResponse.groups:type_name -> genproto.TranslationGroup
 	0,  // 13: genproto.GenreListResponse.genres:type_name -> genproto.Genre
 	1,  // 14: genproto.TagListResponse.tags:type_name -> genproto.Tag
-	6,  // 15: genproto.RankingResponse.ranked_novels:type_name -> genproto.RankedNovel
-	7,  // 16: genproto.NovelService.CreateNovel:input_type -> genproto.CreateNovelRequest
-	9,  // 17: genproto.NovelService.GetNovel:input_type -> genproto.GetNovelRequest
-	10, // 18: genproto.NovelService.ListNovels:input_type -> genproto.ListNovelsRequest
-	12, // 19: genproto.NovelService.UpdateNovel:input_type -> genproto.UpdateNovelRequest
-	13, // 20: genproto.NovelService.DeleteNovel:input_type -> genproto.DeleteRequest
-	15, // 21: genproto.NovelService.CreateChapter:input_type -> genproto.CreateChapterRequest
-	17, // 22: genproto.NovelService.GetChapter:input_type -> genproto.GetChapterRequest
-	18, // 23: genproto.NovelService.ListChapters:input_type -> genproto.ListChaptersRequest
-	20, // 24: genproto.NovelService.UpdateChapter:input_type -> genproto.UpdateChapterRequest
-	13, // 25: genproto.NovelService.DeleteChapter:input_type -> genproto.DeleteRequest
-	21, // 26: genproto.NovelService.CreateAuthor:input_type -> genproto.CreateAuthorRequest
-	23, // 27: genproto.NovelService.ListAuthors:input_type -> genproto.ListAuthorsRequest
-	25, // 28: genproto.NovelService.CreateTranslationGroup:input_type -> genproto.CreateTranslationGroupRequest
-	27, // 29: genproto.NovelService.ListTranslationGroups:input_type -> genproto.ListTranslationGroupsRequest
-	29, // 30: genproto.NovelService.GetGenres:input_type -> genproto.EmptyRequest
-	29, // 31: genproto.NovelService.GetTags:input_type -> genproto.EmptyRequest
-	32, // 32: genproto.NovelService.GetRanking:input_type -> genproto.RankingRequest
-	34, // 33: genproto.NovelService.IncrementViewCount:input_type -> genproto.IncrementViewRequest
-	8,  // 34: genproto.NovelService.CreateNovel:output_type -> genproto.NovelResponse
-	8,  // 35: genproto.NovelService.GetNovel:output_type -> genproto.NovelResponse
-	11, // 36: genproto.NovelService.ListNovels:output_type -> genproto.ListNovelsResponse
-	8,  // 37: genproto.NovelService.UpdateNovel:output_type -> genproto.NovelResponse
-	14, // 38: genproto.NovelService.DeleteNovel:output_type -> genproto.DeleteResponse
-	16, // 39: genproto.NovelService.CreateChapter:output_type -> genproto.ChapterResponse
-	16, // 40: genproto.NovelService.GetChapter:output_type -> genproto.ChapterResponse
-	19, // 41: genproto.NovelService.ListChapters:output_type -> genproto.ListChaptersResponse
-	16, // 42: genproto.NovelService.UpdateChapter:output_type -> genproto.ChapterResponse
-	14, // 43: genproto.NovelService.DeleteChapter:output_type -> genproto.DeleteResponse
-	22, // 44: genproto.NovelService.CreateAuthor:output_type -> genproto.AuthorResponse
-	24, // 45: genproto.NovelService.ListAuthors:output_type -> genproto.ListAuthorsResponse
-	26, // 46: genproto.NovelService.CreateTranslationGroup:output_type -> genproto.TranslationGroupResponse
-	28, // 47: genproto.NovelService.ListTranslationGroups:output_type -> genproto.ListTranslationGroupsResponse
-	30, // 48: genproto.NovelService.GetGenres:output_type -> genproto.GenreListResponse
-	31, // 49: genproto.NovelService.GetTags:output_type -> genproto.TagListResponse
-	33, // 50: genproto.NovelService.GetRanking:output_type -> genproto.RankingResponse
-	35, // 51: genproto.NovelService.IncrementViewCount:output_type -> genproto.IncrementViewResponse
-	34, // [34:52] is the sub-list for method output_type
-	16, // [16:34] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	1,  // 15: genproto.TagResponse.tag:type_name -> genproto.Tag
+	6,  // 16: genproto.RankingResponse.ranked_novels:type_name -> genproto.RankedNovel
+	7,  // 17: genproto.NovelService.CreateNovel:input_type -> genproto.CreateNovelRequest
+	9,  // 18: genproto.NovelService.GetNovel:input_type -> genproto.GetNovelRequest
+	10, // 19: genproto.NovelService.ListNovels:input_type -> genproto.ListNovelsRequest
+	12, // 20: genproto.NovelService.UpdateNovel:input_type -> genproto.UpdateNovelRequest
+	13, // 21: genproto.NovelService.DeleteNovel:input_type -> genproto.DeleteRequest
+	15, // 22: genproto.NovelService.CreateChapter:input_type -> genproto.CreateChapterRequest
+	17, // 23: genproto.NovelService.GetChapter:input_type -> genproto.GetChapterRequest
+	18, // 24: genproto.NovelService.ListChapters:input_type -> genproto.ListChaptersRequest
+	20, // 25: genproto.NovelService.UpdateChapter:input_type -> genproto.UpdateChapterRequest
+	13, // 26: genproto.NovelService.DeleteChapter:input_type -> genproto.DeleteRequest
+	21, // 27: genproto.NovelService.CreateAuthor:input_type -> genproto.CreateAuthorRequest
+	23, // 28: genproto.NovelService.ListAuthors:input_type -> genproto.ListAuthorsRequest
+	25, // 29: genproto.NovelService.CreateTranslationGroup:input_type -> genproto.CreateTranslationGroupRequest
+	27, // 30: genproto.NovelService.ListTranslationGroups:input_type -> genproto.ListTranslationGroupsRequest
+	29, // 31: genproto.NovelService.GetGenres:input_type -> genproto.EmptyRequest
+	32, // 32: genproto.NovelService.CreateTag:input_type -> genproto.CreateTagRequest
+	29, // 33: genproto.NovelService.GetTags:input_type -> genproto.EmptyRequest
+	34, // 34: genproto.NovelService.GetRanking:input_type -> genproto.RankingRequest
+	36, // 35: genproto.NovelService.IncrementViewCount:input_type -> genproto.IncrementViewRequest
+	8,  // 36: genproto.NovelService.CreateNovel:output_type -> genproto.NovelResponse
+	8,  // 37: genproto.NovelService.GetNovel:output_type -> genproto.NovelResponse
+	11, // 38: genproto.NovelService.ListNovels:output_type -> genproto.ListNovelsResponse
+	8,  // 39: genproto.NovelService.UpdateNovel:output_type -> genproto.NovelResponse
+	14, // 40: genproto.NovelService.DeleteNovel:output_type -> genproto.DeleteResponse
+	16, // 41: genproto.NovelService.CreateChapter:output_type -> genproto.ChapterResponse
+	16, // 42: genproto.NovelService.GetChapter:output_type -> genproto.ChapterResponse
+	19, // 43: genproto.NovelService.ListChapters:output_type -> genproto.ListChaptersResponse
+	16, // 44: genproto.NovelService.UpdateChapter:output_type -> genproto.ChapterResponse
+	14, // 45: genproto.NovelService.DeleteChapter:output_type -> genproto.DeleteResponse
+	22, // 46: genproto.NovelService.CreateAuthor:output_type -> genproto.AuthorResponse
+	24, // 47: genproto.NovelService.ListAuthors:output_type -> genproto.ListAuthorsResponse
+	26, // 48: genproto.NovelService.CreateTranslationGroup:output_type -> genproto.TranslationGroupResponse
+	28, // 49: genproto.NovelService.ListTranslationGroups:output_type -> genproto.ListTranslationGroupsResponse
+	30, // 50: genproto.NovelService.GetGenres:output_type -> genproto.GenreListResponse
+	33, // 51: genproto.NovelService.CreateTag:output_type -> genproto.TagResponse
+	31, // 52: genproto.NovelService.GetTags:output_type -> genproto.TagListResponse
+	35, // 53: genproto.NovelService.GetRanking:output_type -> genproto.RankingResponse
+	37, // 54: genproto.NovelService.IncrementViewCount:output_type -> genproto.IncrementViewResponse
+	36, // [36:55] is the sub-list for method output_type
+	17, // [17:36] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_novel_proto_init() }
@@ -2680,7 +2786,7 @@ func file_novel_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_novel_proto_rawDesc), len(file_novel_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   36,
+			NumMessages:   38,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -44,6 +44,7 @@ type NovelRepository interface {
 
 	// Genre & Tag
 	GetGenres(c context.Context) ([]model.Genre, error)
+	CreateTag(c context.Context, name, slug string) (*model.Tag, error)
 	GetTags(c context.Context) ([]model.Tag, error)
 
 	// Ranking
@@ -78,8 +79,6 @@ func (r *PostgresRepository) Close() {
 		log.Println("Error closing database:", err)
 	}
 }
-
-// ── Novel CRUD ─────────────────────────
 
 func (r *PostgresRepository) CreateNovel(c context.Context, n *model.Novel, genreIDs, tagIDs []int32) error {
 	tx, err := r.db.BeginTx(c, nil)
@@ -300,7 +299,6 @@ func (r *PostgresRepository) DeleteNovel(c context.Context, id string) error {
 	return nil
 }
 
-// ── Chapter CRUD ───────────────────────
 
 func (r *PostgresRepository) CreateChapter(c context.Context, ch *model.Chapter) error {
 	_, err := r.db.ExecContext(c,
@@ -396,8 +394,6 @@ func (r *PostgresRepository) DeleteChapter(c context.Context, id string) error {
 	return nil
 }
 
-// ── Author ─────────────────────────────
-
 func (r *PostgresRepository) CreateAuthor(c context.Context, a *model.Author) error {
 	_, err := r.db.ExecContext(c,
 		"INSERT INTO authors (id, name, bio) VALUES ($1, $2, $3)",
@@ -439,8 +435,6 @@ func (r *PostgresRepository) ListAuthors(c context.Context, skip, take uint64) (
 	return authors, nil
 }
 
-// ── Translation Group ──────────────────
-
 func (r *PostgresRepository) CreateTranslationGroup(c context.Context, g *model.TranslationGroup) error {
 	_, err := r.db.ExecContext(c,
 		"INSERT INTO translation_groups (id, name, website_url, description) VALUES ($1, $2, $3, $4)",
@@ -468,8 +462,6 @@ func (r *PostgresRepository) ListTranslationGroups(c context.Context, skip, take
 	return groups, nil
 }
 
-// ── Genre & Tag ────────────────────────
-
 func (r *PostgresRepository) GetGenres(c context.Context) ([]model.Genre, error) {
 	rows, err := r.db.QueryContext(c, "SELECT id, name, slug FROM genres ORDER BY name")
 	if err != nil {
@@ -486,6 +478,19 @@ func (r *PostgresRepository) GetGenres(c context.Context) ([]model.Genre, error)
 		genres = append(genres, g)
 	}
 	return genres, nil
+}
+
+func (r *PostgresRepository) CreateTag(c context.Context, name, slug string) (*model.Tag, error) {
+	t := &model.Tag{}
+	err := r.db.QueryRowContext(c,
+		"INSERT INTO tags (name, slug) VALUES ($1, $2) RETURNING id, name, slug",
+		name, slug,
+	).Scan(&t.ID, &t.Name, &t.Slug)
+	if err != nil {
+		return nil, err
+	}
+
+	return t, nil
 }
 
 func (r *PostgresRepository) GetTags(c context.Context) ([]model.Tag, error) {
@@ -505,8 +510,6 @@ func (r *PostgresRepository) GetTags(c context.Context) ([]model.Tag, error) {
 	}
 	return tags, nil
 }
-
-// ── Ranking ────────────────────────────
 
 func (r *PostgresRepository) GetRanking(c context.Context, period, sortBy string, skip, take uint64) ([]*model.Novel, error) {
 	var dateFilter string
@@ -590,8 +593,6 @@ func (r *PostgresRepository) GetRanking(c context.Context, period, sortBy string
 	return r.scanNovels(c, rows)
 }
 
-// ── View Count ─────────────────────────
-
 func (r *PostgresRepository) IncrementViewCount(c context.Context, novelID string) (int64, error) {
 	_, err := r.db.ExecContext(c, "UPDATE novels SET view_count = view_count + 1 WHERE id = $1", novelID)
 	if err != nil {
@@ -609,8 +610,6 @@ func (r *PostgresRepository) IncrementViewCount(c context.Context, novelID strin
 	err = r.db.QueryRowContext(c, "SELECT view_count FROM novels WHERE id = $1", novelID).Scan(&count)
 	return count, err
 }
-
-// ── Search (SQL fallback) ──────────────
 
 func (r *PostgresRepository) SearchNovels(c context.Context, query string, skip, take uint64) ([]*model.Novel, error) {
 	searchQuery := "%" + query + "%"
@@ -630,8 +629,6 @@ func (r *PostgresRepository) SearchNovels(c context.Context, query string, skip,
 	defer rows.Close()
 	return r.scanNovels(c, rows)
 }
-
-// ── Helpers ────────────────────────────
 
 func (r *PostgresRepository) scanNovels(c context.Context, rows *sql.Rows) ([]*model.Novel, error) {
 	var novels []*model.Novel
